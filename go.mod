@@ -1,3 +1,3 @@
-module github.com/alex123321-maker/proto-schemas
+module github.com/alex123321-maker/reports-proto
 
 go 1.24.4
