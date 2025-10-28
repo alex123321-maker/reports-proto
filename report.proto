@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package reports.v1;
+
+option go_package = "github.com/alex123321-maker/reports/gen/proto/reports/v1;reportsv1";
+
+
+message GetCatalogRequest {
+  // по желанию: можно добавить фильтры или since_ts, но сейчас не требуется
+}
+
+
+message University {
+  string code   = 1; // короткий код (напр. "TPU")
+  string name   = 2; // человекочитаемое имя
+  string city   = 3; // дефолтный город
+  repeated string allowed_work_types = 4; // WorkType.code разрешённых типов работ для данного университета
+  repeated string allowed_sections = 5; // Section.code разрешённых секций для данного университета
+
+}
+
+message WorkType {
+  string name = 1; // человекочитаемое имя
+  string code = 2; // короткий код (напр. "DIP")
+  repeated string required_sections = 3; // обязательные секции для данного типа работы
+}
+
+message Section {
+  string name = 1; // человекочитаемое имя
+  string code = 2; // короткий код (напр. "INTRO")
+}
+
+message Catalog{
+  string schema_version = 1; // версия схемы каталога
+  repeated University universities = 2; // список университетов
+  repeated WorkType work_types     = 3; // список типов работ
+  repeated Section sections        = 4; // список секций
+}
+
+message GetCatalogResponse {
+  Catalog catalog = 1; // каталог
+}
