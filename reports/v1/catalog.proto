@@ -40,3 +40,7 @@ message Catalog{
 message GetCatalogResponse {
   Catalog catalog = 1; // каталог
 }
+
+service CatalogService {
+  rpc GetCatalog(GetCatalogRequest) returns (GetCatalogResponse) {}
+}
