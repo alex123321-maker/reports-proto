@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package reports.v1;
+
+option go_package = "github.com/alex123321-maker/reports/gen/proto/reports/v1;reportsv1";
+
+import "google/protobuf/timestamp.proto";
+
+// gRPC-сервис генерации отчётов
+service ReportsGeneratorService {
+  rpc GenerateDocument(GenerateDocumentRequest) returns (GenerateDocumentResponse);
+}
+
+// Запрос на генерацию отчёта
+message GenerateDocumentRequest {
+  string university_code = 1;      // Код университета (например, "TPU")
+  string work_type_code  = 2;      // Тип работы ("LAB", "COURSE", "REF", "IDZ" и т.п.)
+
+  // Основные поля титула
+  string student_full_name = 3;    // ФИО студента
+  string group             = 4;    // Учебная группа
+  string discipline        = 5;    // Дисциплина
+  string topic             = 6;    // Тема работы
+  string supervisor_name   = 7;    // Руководитель (ФИО)
+  string city              = 8;    // Город
+  google.protobuf.Timestamp date = 9; // Дата на титуле
+
+  // Часто требуемые для ЛР/ИДЗ
+  string work_number = 10;          // Номер работы (0 — не задано)
+  string variant     = 11;          // Номер варианта (0 — не задано)
+
+  // Академические реквизиты вуза/программы
+  string faculty_name        = 12; // Институт/факультет
+  string department_name     = 13; // Кафедра
+  string specialty_code      = 14; // Код направления/специальности (напр., "09.03.01")
+  string specialty_name      = 15; // Наименование направления/профиля
+  string qualification       = 16; // Квалификация: "бакалавр" | "магистр" | "специалист"
+  string study_form          = 17; // Форма обучения: "очная" | "заочная" | "очно-заочная"
+  string record_book_number  = 18; // № зачётной книжки (при необходимости)
+
+  // РУКОВОДИТЕЛЬ: научная степень и должность
+  string supervisor_degree   = 19; // Научная степень (напр., "к.т.н.", "д.ф.-м.н.")
+  string supervisor_position = 21; // Должность (напр., "доцент", "профессор", "старший преподаватель")
+
+  // Секции 
+  repeated SectionInput sections = 20;
+}
+
+// Секция без пользовательского контента
+message SectionInput {
+  string code = 1;        // Идентификатор секции из каталога
+  bool with_content = 2;  // true — вставлять шаблонное наполнение; false — только заголовок
+}
+
+// Ответ с готовым документом
+message GenerateDocumentResponse {
+  bytes docx = 1;           // Сгенерированный DOCX
+  string file_name = 2;     // Имя файла
+  repeated Warning warnings = 3; // Нефатальные предупреждения
+}
+
+// Предупреждения (общие, без привязки к секциям)
+message Warning {
+  string code = 1;       // Например, "UNKNOWN_SECTION", "MISSING_REQUIRED_FIELD"
+  string message = 2;    // Человекочитаемое описание
+}
