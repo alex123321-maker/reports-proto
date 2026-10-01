@@ -35,6 +35,27 @@ message Catalog{
   repeated University universities = 2; // список университетов
   repeated WorkType work_types     = 3; // список типов работ
   repeated Section sections        = 4; // список секций
+  repeated FormattingProfile profiles = 5;
+}
+
+// A reviewed source and explicit rules for one university/direction.
+message FormattingProfile {
+  string id = 1;
+  string university_code = 2;
+  string name = 3;
+  string standard_id = 4;
+  string source_url = 5;
+  string checked_at = 6;
+  string template_version = 7;
+  repeated WorkTypeRequirements work_types = 8;
+}
+
+message WorkTypeRequirements {
+  string work_type_code = 1;
+  repeated string required_sections = 2;
+  repeated string default_sections = 3;
+  repeated string allowed_sections = 4;
+  string scope_note = 5;
 }
 
 message GetCatalogResponse {
